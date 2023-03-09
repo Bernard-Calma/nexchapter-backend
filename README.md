@@ -1,1 +1,5 @@
 # nexchapter-backend
+
+## Python
+
+## Django
