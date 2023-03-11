@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+# ENV
+import os
+from dotenv import load_dotenv
+load_dotenv()
+secret_key = os.environ.get("SECRET_KEY")
+password = os.environ.get("DATABASE_PASSWORD")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#^8-l%v&o^ul08n+9*dw(j+c(0e+s&ic)&mf17e-_35bn=httu'
+SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "corsheaders"
+    "corsheaders",
+    'manga'
 ]
 
 MIDDLEWARE = [
@@ -75,13 +82,12 @@ WSGI_APPLICATION = 'nexchaptersBackend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'manga',
         'USER': 'postgres',
-        'PASSWORD': 'Aluminus10!',
+        'PASSWORD': password,
         'HOST': 'localhost',
         'PORT': '5432'
 
