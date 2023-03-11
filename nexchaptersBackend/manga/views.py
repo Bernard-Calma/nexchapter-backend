@@ -9,13 +9,13 @@ def index(request):
         "mangaList": [
             {
             'title': 'one piece',
-            'image': "https://static.wikia.nocookie.net/onepiece/images/c/c6/Volume_100.png/revision/latest?cb=20210903160940",
+            'image': "https://www.manga33.com/d/c2/one-piece.jpg",
             'totalChapters': 1065,
             'currentChapter': 0,
             },{
-                'title': 'one piece',
-                'image': "https://static.wikia.nocookie.net/onepiece/images/c/c6/Volume_100.png/revision/latest?cb=20210903160940",
-                'totalChapters': 1065,
+                'title': 'naruto',
+                'image': "https://www.manga33.com/d/cover/iq5itsc1gsl.jpg",
+                'totalChapters': 900,
                 'currentChapter': 0,
             }
         ]})
