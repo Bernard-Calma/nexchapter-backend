@@ -4,6 +4,8 @@ from django.core import serializers
 from django.http import JsonResponse
 # Create your views here.
 
+# Model
+from manga.models import Manga
 def index(request):
     return JsonResponse({
         "mangaList": [
