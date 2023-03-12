@@ -8,4 +8,4 @@ from django.http import JsonResponse
 from manga.models import Manga
 def index(request):
     data = list(Manga.objects.values())
-    return JsonResponse(data, safe=False)
+    return JsonResponse({'mangaList': data}, safe=False)
