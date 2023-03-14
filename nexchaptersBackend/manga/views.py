@@ -15,19 +15,18 @@ def index(request):
 
 @csrf_exempt
 def add(request):
-    print("Post API Called")
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    print("Post API Called",body['title'])
     newManga = Manga(
-        title= request.body.title,
-        link = request.body.link,
-        image= request.body.image,
-        current_chapter = request.body.currentChapter
+        title= body['title'],
+        image= body['image'],
+        link = body['link'],
+        current_chapter = body['currentChapter']
     )
     newManga.save()
     return JsonResponse({
         'status': 200,
         'message': "New manga successfully added.",
-        'added': newManga,
+        'added': body,
         })
-    # data = json.loads(request.body) 
-    # print(data)
-    # return HttpResponse(data['message']) 
