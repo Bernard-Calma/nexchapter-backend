@@ -35,11 +35,12 @@ def add(request):
 def update(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
+    print(body['image']) 
     manga_to_edit = Manga.objects.get(id=body['id'])
     manga_to_edit.title = body['title']
-    manga_to_edit.image= body['image'],
-    manga_to_edit.link = body['link'],
-    manga_to_edit.current_chapter = body['currentChapter']
+    manga_to_edit.image= body['image']
+    manga_to_edit.link = body['link']
+    manga_to_edit.current_chapter = body['current_chapter']
     manga_to_edit.save()
     return JsonResponse({
         'status': 200,
