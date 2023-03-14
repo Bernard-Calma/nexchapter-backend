@@ -47,3 +47,15 @@ def update(request):
         'message': "Manga edited successfully.",
         'manga id': body['id'],
         })
+
+
+@csrf_exempt
+def delete(request, id):
+    print("Delete route called")
+    manga_to_delete = Manga.objects.get(id=id)
+    manga_to_delete.delete()
+    return JsonResponse({
+        'status': 200,
+        'message': "Manga Deleted successfully.",
+        'manga id': id,
+    })
