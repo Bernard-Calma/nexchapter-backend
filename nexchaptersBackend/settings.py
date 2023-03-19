@@ -17,6 +17,10 @@ from dotenv import load_dotenv
 load_dotenv()
 secret_key = os.environ.get("SECRET_KEY")
 password = os.environ.get("DATABASE_PASSWORD")
+username = os.environ.get("DATABASE_USER")
+database = os.environ.get("DATABASE")
+db_name = os.environ.get("DBNAME")
+port = os.environ.get("PORT")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +35,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*","192.168.1.123"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -85,11 +89,11 @@ WSGI_APPLICATION = 'nexchaptersBackend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'manga',
-        'USER': 'postgres',
+        'NAME': db_name,
+        'USER': username,
         'PASSWORD': password,
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'HOST': database,
+        'PORT': port
 
     }
 }
