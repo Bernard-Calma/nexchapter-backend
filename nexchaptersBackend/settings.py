@@ -22,6 +22,7 @@ username = os.environ.get("DATABASE_USER")
 database = os.environ.get("DATABASE")
 db_name = os.environ.get("DBNAME")
 port = os.environ.get("PORT")
+host = os.environ.get("HOST")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -145,10 +146,7 @@ django_heroku.settings(locals())
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3006",
-    "http://192.168.1.123"
-]
+CORS_ALLOWED_ORIGINS = [host]
 
 CORS_ALLOW_METHODS = [
     "DELETE",
