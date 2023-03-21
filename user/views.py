@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 # JSON
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.core import serializers
 #Model
 from user.models import User
 
@@ -25,3 +26,27 @@ def add(request):
         'message': "New manga successfully added.",
         'added': body,
         })
+
+@csrf_exempt
+def login(request): 
+    body_unicode = request.body.decode('utf-8')   
+    body = json.loads(body_unicode)   
+    print("Login API Called",body['username'])   
+    user = User.objects.get(username__exact=body['username'])
+    if user.password == body['password']:
+        return JsonResponse({
+            "status": {
+                "code": 200,
+                "message": "Login Success."
+            },
+            "data": {
+                "id": user.id,
+                "username": user.username
+            }
+        }, safe=False)
+    else:
+        return JsonResponse({
+            "status": {
+                "code": 404,
+                "message": "Invalid Username and Password"
+            }}, safe=False)

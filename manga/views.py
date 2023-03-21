@@ -7,8 +7,9 @@ from django.http import JsonResponse
 
 # Model
 from manga.models import Manga
-def index(request):
-    data = list(Manga.objects.values())
+def index(request, id):
+    print("ID: " + id) 
+    data = list(Manga.objects.get(id__exact=id))
     return JsonResponse({'mangaList': data}, safe=False)
 
 @csrf_exempt
