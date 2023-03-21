@@ -32,7 +32,6 @@ def login(request):
     body = json.loads(body_unicode)   
     print("Login API Called",body['username'])   
     user = User.objects.filter(username__exact=body['username']).values()[0]
-    print(user)
     if user['password'] == body['password']:
         user.pop('password')
         return JsonResponse({
