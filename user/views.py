@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 # JSON
 import json
-from django.http import JsonResponse, HttpResponse
-from django.core import serializers
+from django.http import JsonResponse
 #Model
 from user.models import User
 
@@ -32,17 +31,16 @@ def login(request):
     body_unicode = request.body.decode('utf-8')   
     body = json.loads(body_unicode)   
     print("Login API Called",body['username'])   
-    user = User.objects.get(username__exact=body['username'])
-    if user.password == body['password']:
+    user = User.objects.filter(username__exact=body['username']).values()[0]
+    print(user)
+    if user['password'] == body['password']:
+        user.pop('password')
         return JsonResponse({
             "status": {
                 "code": 200,
                 "message": "Login Success."
             },
-            "data": {
-                "userID": user.id,
-                "username": user.username
-            }
+            "data": user
         }, safe=False)
     else:
         return JsonResponse({
