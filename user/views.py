@@ -40,7 +40,7 @@ def login(request):
                 "message": "Login Success."
             },
             "data": {
-                "id": user.id,
+                "userID": user.id,
                 "username": user.username
             }
         }, safe=False)
