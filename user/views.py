@@ -31,19 +31,22 @@ def login(request):
     body_unicode = request.body.decode('utf-8')   
     body = json.loads(body_unicode)   
     print("Login API Called",body['username'])   
-    user = User.objects.filter(username__exact=body['username']).values()[0]
-    if user['password'] == body['password']:
-        user.pop('password')
+    try:
+        user = User.objects.filter(username__exact=body['username']).values()[0]
+        if user['password'] == body['password']:
+            user.pop('password')
+            return JsonResponse({
+                "status": {
+                    "code": 200,
+                    "message": "Login Success."
+                },
+                "data": user
+            }, safe=False)
+    except:
         return JsonResponse({
-            "status": {
-                "code": 200,
-                "message": "Login Success."
-            },
-            "data": user
-        }, safe=False)
-    else:
-        return JsonResponse({
-            "status": {
-                "code": 404,
-                "message": "Invalid Username and Password"
-            }}, safe=False)
+                "status": {
+                    "code": 404,
+                    "message": "Invalid Username or Password."
+                },
+                "data": {}
+            }, safe=False)

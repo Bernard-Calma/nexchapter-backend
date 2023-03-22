@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 # Model
 from manga.models import Manga
+from user.models import User
 def index(request, id):
     data = list(Manga.objects.filter(user_id = id).values())
     return JsonResponse({'mangaList': data}, safe=False)
@@ -16,11 +17,13 @@ def add(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     print("Post API Called",body['title'])
+    user = User.objects.get(id=body['userID'])
     newManga = Manga(
         title= body['title'],
         image= body['image'],
         link = body['link'],
-        current_chapter = body['currentChapter']
+        current_chapter = body['currentChapter'],
+        user = user
     )
     newManga.save()
     return JsonResponse({
@@ -30,16 +33,17 @@ def add(request):
         })
 
 @csrf_exempt
-def update(request):
+def update(request, id): 
+    print("Update route called")
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
-    print(body['image']) 
-    manga_to_edit = Manga.objects.get(id=body['id'])
+    print(body['image'])  
+    manga_to_edit = Manga.objects.get(id=id)
     manga_to_edit.title = body['title']
     manga_to_edit.image= body['image']
     manga_to_edit.link = body['link']
-    manga_to_edit.current_chapter = body['current_chapter']
-    manga_to_edit.save()
+    manga_to_edit.current_chapter = body['current_chapter'] 
+    manga_to_edit.save() 
     return JsonResponse({
         'status': 200,
         'message': "Manga edited successfully.",
