@@ -28,9 +28,10 @@ def add(request):
 
 @csrf_exempt
 def login(request): 
+    print(request.body) 
     body_unicode = request.body.decode('utf-8')   
     body = json.loads(body_unicode)   
-    print("Login API Called",body['username'])   
+    print("Login API Called",body['username'])
     try:
         user = User.objects.filter(username__exact=body['username']).values()[0]
         if user['password'] == body['password']:
