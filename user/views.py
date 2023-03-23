@@ -5,6 +5,12 @@ import json
 from django.http import JsonResponse, HttpResponse
 #Model
 from user.models import User
+from django.forms.models import model_to_dict
+# bcrypt
+from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
+hasher = BCryptSHA256PasswordHasher()
+import bcrypt
+
 
 # Create your views here.
 @csrf_exempt
@@ -12,30 +18,34 @@ def register(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     print("Register API Called",body['username'])
-    requestUser = {
+    request_user = { 
         "username": body['username'],
         "email": body['email'],
-        "password": body['password'],
-        "verify_password": body['verifyPassword']
+        "password": body['password'], 
     }
-
-    if requestUser['password'] != requestUser['verify_password']:
+    if request_user['password'] != body['verifyPassword'] :
         error_message = "passwords does not match"
     try:
-        newUser = User(
-            username= body['username'],
-            email= body['email'],
-            password = body['password'],
-        )
-        newUser.save()
-        del body['password']
+        request_user['password'] = request_user['password'].encode('utf-8')
+        request_user['password'] = bcrypt.hashpw(request_user['password'], bcrypt.gensalt())
+        new_user = User(
+            username= request_user['username'],
+            email= request_user['email'],
+            password = request_user['password'],) 
+        new_user.save()
+        user_dict = model_to_dict(new_user)
+        del user_dict['password']
+        print(user_dict)
         return JsonResponse({
-            'status': 200,
-            'message': "New manga successfully added.",
-            'added': body, 
+             "status": {
+                    "code": 200,
+                    "message": "Registered Successfully."
+                },
+            'data': user_dict, 
             })
     except Exception as e:
         error_message = str(e) 
+        print(error_message) 
         email_check = error_message.find("email") == -1
         username_check = error_message.find("username") == -1
         if not email_check:
