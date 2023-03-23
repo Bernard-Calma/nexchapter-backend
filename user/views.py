@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 # JSON
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 #Model
 from user.models import User
 
@@ -11,20 +11,43 @@ from user.models import User
 def register(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
-    print("Post API Called",body['username'])
-    newUser = User(
-        username= body['username'],
-        email= body['email'],
-        password = body['password'],
-        current_chapter = body['currentChapter']
-    )
-    newUser.save()
-    del body['password']
-    return JsonResponse({
-        'status': 200,
-        'message': "New manga successfully added.",
-        'added': body,
-        })
+    print("Register API Called",body['username'])
+    requestUser = {
+        "username": body['username'],
+        "email": body['email'],
+        "password": body['password'],
+        "verify_password": body['verifyPassword']
+    }
+
+    if requestUser['password'] != requestUser['verify_password']:
+        error_message = "passwords does not match"
+    try:
+        newUser = User(
+            username= body['username'],
+            email= body['email'],
+            password = body['password'],
+        )
+        newUser.save()
+        del body['password']
+        return JsonResponse({
+            'status': 200,
+            'message': "New manga successfully added.",
+            'added': body, 
+            })
+    except Exception as e:
+        error_message = str(e) 
+        email_check = error_message.find("email") == -1
+        username_check = error_message.find("username") == -1
+        if not email_check:
+            error_message = "email already exist."
+        elif not username_check:
+            error_message = "username already exist."
+        return JsonResponse({
+            "status": {
+                    "code": 404,
+                    "message": error_message
+                },
+            }) 
 
 @csrf_exempt
 def login(request): 
