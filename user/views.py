@@ -8,7 +8,7 @@ from user.models import User
 
 # Create your views here.
 @csrf_exempt
-def add(request):
+def register(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     print("Post API Called",body['username'])
@@ -31,23 +31,29 @@ def login(request):
     print(request.body) 
     body_unicode = request.body.decode('utf-8')   
     body = json.loads(body_unicode)   
+    username = body['username']
+    password = body['password']
     print("Login API Called",body['username'])
     try:
         user = User.objects.filter(username__exact=body['username']).values()[0]
+        print("User: " , user)
         if user['password'] == body['password']:
             user.pop('password')
             return JsonResponse({
-                "status": {
+                "status": { 
                     "code": 200,
                     "message": "Login Success."
                 },
                 "data": user
             }, safe=False)
     except:
+        error_message = "Invalid username or password" 
+        if username == "" or  password == "":
+            error_message = "All fields should not be empty"
         return JsonResponse({
                 "status": {
                     "code": 404,
-                    "message": "Invalid Username or Password."
+                    "message": error_message
                 },
                 "data": {}
             }, safe=False)
