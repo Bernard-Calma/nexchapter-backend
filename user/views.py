@@ -6,6 +6,7 @@ from django.http import JsonResponse, HttpResponse
 #Model
 from user.models import User
 from django.forms.models import model_to_dict
+from django.contrib.auth import authenticate, login
 # bcrypt
 from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
 hasher = BCryptSHA256PasswordHasher()
@@ -35,7 +36,6 @@ def register(request):
         new_user.save()
         user_dict = model_to_dict(new_user)
         del user_dict['password']
-        print(user_dict)
         return JsonResponse({
              "status": {
                     "code": 200,
@@ -61,27 +61,25 @@ def register(request):
 
 @csrf_exempt
 def login(request): 
-    print(request.body) 
     body_unicode = request.body.decode('utf-8')   
     body = json.loads(body_unicode)   
-    username = body['username']
-    password = body['password']
-    print("Login API Called",body['username'])
+    print("Login API Called",body['username']) 
     try:
-        user = User.objects.filter(username__exact=body['username']).values()[0]
-        print("User: " , user)
-        if user['password'] == body['password']:
-            user.pop('password')
+        user = User.objects.get(username__exact=body['username'])  
+        user_dict = model_to_dict(user)
+        if user_dict['password'] == body['password']:
+            del user_dict['password']
             return JsonResponse({
                 "status": { 
                     "code": 200,
                     "message": "Login Success."
                 },
-                "data": user
+                "data": user_dict
             }, safe=False)
-    except:
+    except Exception as e:
+        print("Error Loggin In: ", str(e)) 
         error_message = "Invalid username or password" 
-        if username == "" or  password == "":
+        if body['username'] == "" or  body['password'] == "":
             error_message = "All fields should not be empty"
         return JsonResponse({
                 "status": {

@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 # Return JSON File
 import json
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 # Create your views here.
 
@@ -18,26 +18,26 @@ def add(request):
     body = json.loads(body_unicode)
     print("Post API Called",body['title'])
     user = User.objects.get(id=body['userID'])
-    newManga = Manga(
+    new_manga = Manga(
         title= body['title'],
         image= body['image'],
         link = body['link'],
         current_chapter = body['currentChapter'],
         user = user
     )
-    newManga.save()
+    new_manga.save()
+    new_mangga_dict = model_to_dict(new_manga)
     return JsonResponse({
         'status': 200,
         'message': "New manga successfully added.",
-        'added': body,
+        'added': new_mangga_dict,
         })
 
 @csrf_exempt
 def update(request, id): 
     print("Update route called")
     body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
-    print(body['image'])  
+    body = json.loads(body_unicode) 
     manga_to_edit = Manga.objects.get(id=id)
     manga_to_edit.title = body['title']
     manga_to_edit.image= body['image']
