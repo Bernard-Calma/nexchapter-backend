@@ -14,9 +14,9 @@ def index(request, id):
 
 @csrf_exempt
 def add(request):
-    body_unicode = request.body.decode('utf-8')
+    body_unicode = request.body.decode('utf-8') 
     body = json.loads(body_unicode)
-    print("Post API Called",body['title'])
+    print("Add Manga Route Called",body['title'])
     user = User.objects.get(id=body['userID'])
     new_manga = Manga(
         title= body['title'],
