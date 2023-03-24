@@ -16,17 +16,18 @@ def index(request, id):
 def add(request):
     body_unicode = request.body.decode('utf-8') 
     body = json.loads(body_unicode)
-    print("Add Manga Route Called",body['title'])
-    user = User.objects.get(id=body['userID'])
+    print("Add Manga Route Called",body['title']) 
+    user = User.objects.get(id=body['userID']) 
     new_manga = Manga(
         title= body['title'],
         image= body['image'],
         link = body['link'],
-        current_chapter = body['currentChapter'],
+        current_chapter = body['currentChapter'], 
         user = user
     )
     new_manga.save()
     new_mangga_dict = model_to_dict(new_manga)
+    print(f'User: {user} added {new_mangga_dict}')  
     return JsonResponse({
         'status': 200,
         'message': "New manga successfully added.",
